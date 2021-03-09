@@ -7,7 +7,7 @@ PubSubClient MQTTclient(espClient);
 void setupWiFi() {
   WiFi.persistent(false);
   WiFi.mode(WIFI_STA);
-  WiFi.hostname(HOSTNAME);
+  WiFi.setHostname(HOSTNAME);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print(F("Attempting WiFi connection ..."));
   while (WiFi.status() != WL_CONNECTED) {
@@ -77,51 +77,51 @@ void output_P(const ACStatus status, PGM_P topic, PGM_P payload) {
   MQTTclient.publish_P(mqtt_topic, payload, true);
 }
 
-#if TEMP_MEASURE_PERIOD > 0
-OneWire oneWire(ONE_WIRE_BUS);       // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
-DallasTemperature sensors(&oneWire); // Pass our oneWire reference to Dallas Temperature.
-DeviceAddress insideThermometer;     // arrays to hold device address
+//#if TEMP_MEASURE_PERIOD > 0
+//OneWire oneWire(ONE_WIRE_BUS);       // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
+//DallasTemperature sensors(&oneWire); // Pass our oneWire reference to Dallas Temperature.
+//DeviceAddress insideThermometer;     // arrays to hold device address
 
-void getDs18x20Temperature(int temp_hysterese) {
-  static unsigned long DS1820Millis = millis();
-  static int16_t tempR_old = 0xffff;
+//void getDs18x20Temperature(int temp_hysterese) {
+//  static unsigned long DS1820Millis = millis();
+//  static int16_t tempR_old = 0xffff;
 
-  if (millis() - DS1820Millis > TEMP_MEASURE_PERIOD * 1000) {
-    int16_t tempR = sensors.getTemp(insideThermometer);
-    int16_t tempR_diff = tempR - tempR_old; // avoid using other functions inside the brackets of abs, see https://www.arduino.cc/reference/en/language/functions/math/abs/
-    if (abs(tempR_diff) > temp_hysterese) {
-      tempR_old = tempR;
-      char strtmp[10];
-      dtostrf(sensors.rawToCelsius(tempR), 0, 2, strtmp);
-      Serial.printf_P(PSTR("new DS18x20 temperature=%s°C\n"), strtmp);
-      output_P(status_tds1820, PSTR(TOPIC_TDS1820), strtmp);
-    }
-    DS1820Millis = millis();
-    sensors.requestTemperatures();
-  }
-}
+//  if (millis() - DS1820Millis > TEMP_MEASURE_PERIOD * 1000) {
+//    int16_t tempR = sensors.getTemp(insideThermometer);
+//    int16_t tempR_diff = tempR - tempR_old; // avoid using other functions inside the brackets of abs, see https://www.arduino.cc/reference/en/language/functions/math/abs/
+//    if (abs(tempR_diff) > temp_hysterese) {
+//      tempR_old = tempR;
+//      char strtmp[10];
+//      dtostrf(sensors.rawToCelsius(tempR), 0, 2, strtmp);
+//      Serial.printf_P(PSTR("new DS18x20 temperature=%s°C\n"), strtmp);
+//      output_P(status_tds1820, PSTR(TOPIC_TDS1820), strtmp);
+//    }
+//    DS1820Millis = millis();
+//    sensors.requestTemperatures();
+//  }
+//}
 
-void printAddress(DeviceAddress deviceAddress) {
-  for (uint8_t i = 0; i < 8; i++)
-  {
-    if (deviceAddress[i] < 16)
-      Serial.print(F("0"));
-    Serial.print(deviceAddress[i], HEX);
-  }
-}
+//void printAddress(DeviceAddress deviceAddress) {
+//  for (uint8_t i = 0; i < 8; i++)
+//  {
+//    if (deviceAddress[i] < 16)
+//      Serial.print(F("0"));
+//    Serial.print(deviceAddress[i], HEX);
+//  }
+//}
 
-void setup_ds18x20() {
-  sensors.begin();
-  Serial.printf_P(PSTR("Found %i DS18xxx family devices.\n"), sensors.getDS18Count());
-  if (!sensors.getAddress(insideThermometer, 0))
-    Serial.println(F("Unable to find address for Device 0"));
-  else
-    Serial.printf_P(PSTR("Device 0 Address: 0x%02x\n"), insideThermometer);
-  sensors.setResolution(insideThermometer, 9); // set the resolution to 9 bit
-  sensors.setWaitForConversion(false);
-  sensors.requestTemperatures(); // Send the command to get temperatures
-}
-#endif
+//void setup_ds18x20() {
+//  sensors.begin();
+//  Serial.printf_P(PSTR("Found %i DS18xxx family devices.\n"), sensors.getDS18Count());
+//  if (!sensors.getAddress(insideThermometer, 0))
+//    Serial.println(F("Unable to find address for Device 0"));
+//  else
+//    Serial.printf_P(PSTR("Device 0 Address: 0x%02x\n"), insideThermometer);
+//  sensors.setResolution(insideThermometer, 9); // set the resolution to 9 bit
+//  sensors.setWaitForConversion(false);
+//  sensors.requestTemperatures(); // Send the command to get temperatures
+//}
+//#endif
 
 void setupOTA() {
   ArduinoOTA.setHostname(OTA_HOSTNAME);

@@ -27,14 +27,14 @@
 //#define POWERON_WHEN_CHANGING_MODE true           // uncomment it to switch on the AC when the mode (heat, cool, dry etc.) is changed
                                                     // used e.g. for home assistant support
 
-#include <ESP8266WiFi.h>        // https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WiFi
+#include <WiFi.h>
 #include <PubSubClient.h>       // https://github.com/knolleary/pubsubclient
 #include <ArduinoOTA.h>         // https://github.com/esp8266/Arduino/tree/master/libraries/ArduinoOTA
 
-#if TEMP_MEASURE_PERIOD > 0
-#include <OneWire.h>            // https://www.pjrc.com/teensy/td_libs_OneWire.html
-#include <DallasTemperature.h>  // https://github.com/milesburton/Arduino-Temperature-Control-Library
-#endif
+//#if TEMP_MEASURE_PERIOD > 0
+//#include <OneWire.h>            // https://www.pjrc.com/teensy/td_libs_OneWire.html
+//#include <DallasTemperature.h>  // https://github.com/milesburton/Arduino-Temperature-Control-Library
+//#endif
 
 extern PubSubClient MQTTclient;
 
@@ -47,7 +47,7 @@ void publish_cmd_invalidparameter();
 void output_P(ACStatus status, PGM_P topic, PGM_P payload);
 
 void setupOTA();
-void setup_ds18x20();
-void getDs18x20Temperature(int temp_hysterese);
+//void setup_ds18x20();
+//void getDs18x20Temperature(int temp_hysterese);
 
 #endif

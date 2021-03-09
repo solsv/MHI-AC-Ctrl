@@ -305,9 +305,9 @@ void setup() {
   Serial.println(F("MHI-AC-Ctrl starting"));
   Serial.printf_P(PSTR("CPU frequency[Hz]=%lu\n"), F_CPU);
 
-#if TEMP_MEASURE_PERIOD > 0
-  setup_ds18x20();
-#endif
+//#if TEMP_MEASURE_PERIOD > 0
+//  setup_ds18x20();
+//#endif
   setupWiFi();
   setupOTA();
   MQTTclient.setServer(MQTT_SERVER, MQTT_PORT);
@@ -322,9 +322,9 @@ void loop() {
     mhi_ac_ctrl_core.reset_old_values();  // after a reconnect
   ArduinoOTA.handle();
 
-#if TEMP_MEASURE_PERIOD > 0
-  getDs18x20Temperature(25);
-#endif
+//#if TEMP_MEASURE_PERIOD > 0
+//  getDs18x20Temperature(25);
+//#endif
 
   int ret = mhi_ac_ctrl_core.loop(100);
   if (ret < 0)
